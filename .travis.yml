@@ -8,9 +8,9 @@ php:
 
 env:
   # Using standard binary
-  - CLAMSCAN_BIN="/usr/local/bin/clamscan"
+  - CLAMSCAN_BIN="/usr/bin/clamscan"
   # Using daemon
-  - CLAMSCAN_BIN="/usr/local/bin/clamdscan"
+  - CLAMSCAN_BIN="/usr/bin/clamdscan"
 
 before_script:
   - sudo apt-get update -qq
@@ -18,6 +18,8 @@ before_script:
   - sudo apt-get install -qq clamav-daemon
   - sudo freshclam -v
   - sudo /etc/init.d/clamav-daemon start
+  - whereis clamscan
+  - whereis clamdscan
   - clamscan composer.json
   - clamdscan --fdpass composer.json
   - composer install --dev
