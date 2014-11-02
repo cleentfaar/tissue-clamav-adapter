@@ -1,0 +1,35 @@
+{
+  "name": "cleentfaar/tissue-clamav-adapter",
+  "description": "A Tissue adapter that implements the ClamAV virus-scanner",
+  "keywords": [
+    "tissue",
+    "anti-virus",
+    "virus",
+    "clamav",
+    "security"
+  ],
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Cas Leentfaar",
+      "homepage": "https://github.com/cleentfaar",
+      "email": "info@casleentfaar.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.4",
+    "cleentfaar/tissue": "dev-master"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~4.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "CL\\Tissue\\Adapter\\ClamAV\\": ""
+    }
+  },
+  "config": {
+    "bin-dir": "bin"
+  }
+}
