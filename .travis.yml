@@ -6,13 +6,13 @@ php:
     - hhvm
 
 env:
-  - CLAMDSCAN_BIN="/usr/bin/clamdscan"
+  - CLAMDSCAN_BIN="sudo /usr/bin/clamdscan"
 
 before_script:
   - sudo apt-get install clamav -y
   - sudo apt-get install clamav-daemon -y
   - sudo service clamav-daemon start
-  - whereis clamdscan;./usr/local/bin/clamdscan --fdpass composer.json
+  - sudo clamdscan --fdpass composer.json
   - composer install --dev
 
 script: ./bin/phpunit --coverage-clover=coverage.clover
