@@ -62,7 +62,7 @@ class ClamAVAdapter extends AbstractAdapter
      */
     private function createProcess($path, array $options)
     {
-        $processArgs = [$this->clamScanPath];
+        $processArgs = ['sudo', $this->clamScanPath];
         $pb = $this->createProcessBuilder($processArgs);
 
         $pb->add('--no-summary');
