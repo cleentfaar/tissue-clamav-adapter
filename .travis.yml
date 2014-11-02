@@ -8,7 +8,6 @@ php:
 before_script:
   - sudo apt-get install clamav -y
   - sudo apt-get install clamav-daemon -y
-  - sudo service clamav-daemon restart
   - /usr/bin/clamdscan --fdpass composer.json
   - composer install --dev
 
