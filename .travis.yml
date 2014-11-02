@@ -9,9 +9,10 @@ env:
   - CLAMDSCAN_BIN="sudo /usr/bin/clamdscan"
 
 before_script:
-  - sudo apt-get install clamav -y
-  - sudo apt-get install clamav-daemon -y
-  - sudo service clamav-daemon start
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq clamav
+  - sudo apt-get install -qq clamav-daemon
+  - sudo service clamav-daemon restart
   - sudo clamdscan --fdpass composer.json
   - composer install --dev
 
