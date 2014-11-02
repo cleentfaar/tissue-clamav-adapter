@@ -12,6 +12,7 @@ before_script:
   - sudo apt-get update -qq
   - sudo apt-get install -qq clamav
   - sudo apt-get install -qq libclamunrar6
+  - sudo freshclam -v
   - sudo clamscan composer.json
   - composer install --dev
 
