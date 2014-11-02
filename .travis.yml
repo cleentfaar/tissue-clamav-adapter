@@ -9,6 +9,7 @@ env:
   - CLAMDSCAN_BIN="/usr/bin/clamdscan"
 
 before_script:
+  - sudo apt-get install clamav -y
   - sudo apt-get install clamav-daemon -y
   - sudo service clamav-daemon start
   - ./usr/bin/clamdscan --fdpass composer.json
