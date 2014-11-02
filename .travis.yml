@@ -11,9 +11,7 @@ env:
 before_script:
   - sudo apt-get update -qq
   - sudo apt-get install -qq clamav
-  - sudo apt-get install -qq clamav-daemon
   - sudo freshclam -v
-  - sudo clamdscan --fdpass composer.json
   - sudo clamscan --fdpass composer.json
   - composer install --dev
 
