@@ -9,8 +9,9 @@ env:
   - CLAMAV_BIN="/usr/bin/clamdscan"
 
 before_script:
+  - sudo apt-get install clamav -y
   - sudo apt-get install clamav-daemon -y
-  - sudo service clamav-daemon start
+  - sudo service clamav-daemon restart
   - composer install --dev
 
 script: ./bin/phpunit --coverage-clover=coverage.clover
