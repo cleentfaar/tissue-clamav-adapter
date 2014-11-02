@@ -5,9 +5,6 @@ php:
     - 5.6
     - hhvm
 
-env:
-  - CLAMAV_BIN="/usr/bin/clamdscan"
-
 before_script:
   - sudo apt-get install clamav -y
   - sudo apt-get install clamav-daemon -y
