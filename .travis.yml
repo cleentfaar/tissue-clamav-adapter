@@ -7,7 +7,7 @@ php:
     - hhvm
 
 env:
-  - CLAMDSCAN_BIN="clamscan"
+  - CLAMSCAN_BIN="clamdscan"
 
 before_script:
   - sudo apt-get update -qq
