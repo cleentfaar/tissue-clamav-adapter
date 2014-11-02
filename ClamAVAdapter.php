@@ -105,23 +105,4 @@ class ClamAVAdapter extends AbstractAdapter
     {
         return substr($this->clamScanPath, -9) === 'clamdscan';
     }
-
-    /**
-     * @param array $paths
-     * @param array $options
-     *
-     * @return ScanResult
-     */
-    private function scanArray(array $paths, array $options)
-    {
-        $files = [];
-        $detections = [];
-        foreach ($paths as $path) {
-            $result = $this->scan($path, $options);
-            $files = array_merge($files, $result->getFiles());
-            $detections = array_merge($detections, $result->getDetections());
-        }
-
-        return new ScanResult($paths, $files, $detections);
-    }
 }
