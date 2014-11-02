@@ -4,6 +4,7 @@ namespace CL\Tissue\Adapter\ClamAV;
 
 use CL\Tissue\Adapter\AbstractAdapter;
 use CL\Tissue\Exception\AdapterException;
+use CL\Tissue\Model\Detection;
 use CL\Tissue\Model\ScanResult;
 
 class ClamAVAdapter extends AbstractAdapter
@@ -90,7 +91,9 @@ class ClamAVAdapter extends AbstractAdapter
         foreach ($lines as $line) {
             $file = substr($line, 0, strripos($line, ':'));
             if (substr($line, -3) !== ' OK') {
-                $detections[] = $file;
+                $afterFile = substr($line, strripos($line, ':') + 1);
+                $description = substr($afterFile, 0, -7);
+                $detections[] = $this->createDetection($file, Detection::TYPE_VIRUS, $description);
             }
             $files[] = $file;
         }
