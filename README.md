@@ -1,4 +1,4 @@
-# ClamAV adapter for Tissue [![License](https://poser.pugx.org/cleentfaar/tissue-clamav-adapter/license.svg)](https://packagist.org/packages/cleentfaar/tissue-clamav-adapter)
+# Tissue adapter for ClamAV [![License](https://poser.pugx.org/cleentfaar/tissue-clamav-adapter/license.svg)](https://packagist.org/packages/cleentfaar/tissue-clamav-adapter)
 
 An adapter for the Tissue library that implements the ClamAV engine.
 
