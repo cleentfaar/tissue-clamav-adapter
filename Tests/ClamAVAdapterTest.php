@@ -84,7 +84,7 @@ class ClamAVAdapterTest extends AdapterTestCase
     public function testScanWithDetection()
     {
         $adapter = new ClamAVAdapter($this->clamScanPath);
-        $result = $adapter->scan(__DIR__ . '/res/eicar.com.txt');
+        $result = $adapter->scan(__DIR__ . '/Fixtures/virus.txt');
 
         $this->assertCount(1, $result->getFiles());
         $this->assertCount(1, $result->getDetections());
