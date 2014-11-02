@@ -16,12 +16,14 @@ before_script:
   - sudo apt-get update -qq
   - sudo apt-get install -qq clamav
   - sudo apt-get install -qq clamav-daemon
+  # TODO: find a faster replacement for this as it currently takes at least 2 minutes to download
   - sudo freshclam -v
+  # Start the daemon
   - sudo /etc/init.d/clamav-daemon start
-  - whereis clamscan
-  - whereis clamdscan
+  # Prevent further building if following commands fail
   - clamscan composer.json
   - clamdscan --fdpass composer.json
+  # Continue safely...
   - composer install --dev
 
 script: ./bin/phpunit --coverage-clover=coverage.clover

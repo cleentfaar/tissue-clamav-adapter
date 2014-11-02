@@ -20,4 +20,4 @@ to install this package.
 ### Documentation
 
 - [Installation](Resources/doc/installation.md)
-- [Usage](Resources/doc/usage.md) (Coming soon!)
+- [Usage](Resources/doc/usage.md)
