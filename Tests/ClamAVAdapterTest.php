@@ -12,13 +12,11 @@ class ClamAVAdapterTest extends AdapterTestCase
      */
     protected function createAdapter()
     {
-        if (!$clamscanPath = $this->findExecutable('clamdscan', 'CLAMDSCAN_BIN')) {
-            if (!$clamscanPath = $this->findExecutable('clamscan', 'CLAMSCAN_BIN')) {
-                $this->markTestSkipped('Unable to locate `clamdscan` or `clamscan` executable.');
-            }
+        if (!$clamScanPath = $this->findExecutable('clamscan', 'CLAMSCAN_BIN')) {
+            $this->markTestSkipped('Unable to locate `clamscan` executable.');
         }
 
-        return new ClamAVAdapter($clamscanPath);
+        return new ClamAVAdapter($clamScanPath);
     }
 
     /**
