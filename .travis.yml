@@ -12,6 +12,7 @@ before_script:
   - sudo apt-get install clamav -y
   - sudo apt-get install clamav-daemon -y
   - sudo service clamav-daemon restart
+  - sudo freshclam -v
   - composer install --dev
 
 script: ./bin/phpunit --coverage-clover=coverage.clover
