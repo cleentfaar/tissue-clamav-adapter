@@ -14,7 +14,9 @@ before_script:
   - sudo apt-get install -qq clamav
   - sudo apt-get install -qq clamav-daemon
   - sudo freshclam -v
+  - sudo /etc/init.d/clamav-daemon start
   - clamscan composer.json
+  - clamdscan --fdpass composer.json
   - composer install --dev
 
 script: ./bin/phpunit --coverage-clover=coverage.clover
