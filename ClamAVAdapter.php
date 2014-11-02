@@ -62,13 +62,12 @@ class ClamAVAdapter extends AbstractAdapter
      */
     private function createProcess($path, array $options)
     {
-        $processArgs = ['sudo', $this->clamScanPath];
-        $pb = $this->createProcessBuilder($processArgs);
-
+        $pb = $this->createProcessBuilder([$this->clamScanPath]);
         $pb->add('--no-summary');
 
         if ($this->usesDaemon()) {
-            // needed to bypass errors when executed under a different user (probably applies to every application)
+            // needed to bypass errors when executed under a different user
+            // this probably applies to almost every application
             $pb->add('--fdpass');
         }
 
