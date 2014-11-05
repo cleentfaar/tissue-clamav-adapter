@@ -8,6 +8,11 @@ use CL\Tissue\Tests\Adapter\AdapterTestCase;
 class ClamAVAdapterTest extends AdapterTestCase
 {
     /**
+     * @var ClamAVAdapter
+     */
+    protected $adapter;
+
+    /**
      * {@inheritdoc}
      */
     protected function createAdapter()
@@ -16,7 +21,10 @@ class ClamAVAdapterTest extends AdapterTestCase
             $this->markTestSkipped('Unable to locate `clamscan` executable.');
         }
 
-        return new ClamAVAdapter($clamScanPath);
+        $adapter = new ClamAVAdapter($clamScanPath);
+        if (isset($_SERVER['CLAMSCAN_DB'])) {
+            $adapter->setDatabase($_SERVER['CLAMSCAN_DB']);
+        }
     }
 
     /**
@@ -26,5 +34,14 @@ class ClamAVAdapterTest extends AdapterTestCase
     public function testInvalidBinary()
     {
         new ClamAVAdapter('/path/to/non-existing/binary');
+    }
+
+    /**
+     * @expectedException \CL\Tissue\Exception\AdapterException
+     * @expectedExceptionMessage The `clamscan` or `clamdscan` executable could not be found
+     */
+    public function testWithDatabase()
+    {
+        $this->adapter->setDatabase('/path/to/database');
     }
 }

@@ -15,6 +15,11 @@ class ClamAVAdapter extends AbstractAdapter
     private $clamScanPath;
 
     /**
+     * @var string
+     */
+    private $pathToDatabase;
+
+    /**
      * @param string $clamScanPath
      */
     public function __construct($clamScanPath)
@@ -55,6 +60,14 @@ class ClamAVAdapter extends AbstractAdapter
     }
 
     /**
+     * @param string $pathToDatabase
+     */
+    public function setDatabase($pathToDatabase)
+    {
+        $this->pathToDatabase = $pathToDatabase;
+    }
+
+    /**
      * @param string $path
      * @param array  $options
      *
@@ -64,6 +77,10 @@ class ClamAVAdapter extends AbstractAdapter
     {
         $pb = $this->createProcessBuilder([$this->clamScanPath]);
         $pb->add('--no-summary');
+
+        if ($this->pathToDatabase) {
+            $pb->add(sprintf('--database=%s', $this->dbPath));
+        }
 
         if ($this->usesDaemon()) {
             // needed to bypass errors when executed under a different user
