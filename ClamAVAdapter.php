@@ -60,7 +60,7 @@ class ClamAVAdapter extends AbstractAdapter
     }
 
     /**
-     * @param string $pathToDatabase
+     * @param string $databasePath
      */
     public function setDatabase($databasePath)
     {
