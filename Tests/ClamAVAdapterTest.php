@@ -21,10 +21,7 @@ class ClamAVAdapterTest extends AdapterTestCase
             $this->markTestSkipped('Unable to locate `clamscan` executable.');
         }
 
-        $adapter = new ClamAVAdapter($clamScanPath);
-        if (isset($_SERVER['CLAMSCAN_DB'])) {
-            $adapter->setDatabase($_SERVER['CLAMSCAN_DB']);
-        }
+        return new ClamAVAdapter($clamScanPath, isset($_SERVER['CLAMSCAN_DB']) ? $_SERVER['CLAMSCAN_DB'] : null);
     }
 
     /**
@@ -34,14 +31,5 @@ class ClamAVAdapterTest extends AdapterTestCase
     public function testInvalidBinary()
     {
         new ClamAVAdapter('/path/to/non-existing/binary');
-    }
-
-    /**
-     * @expectedException \CL\Tissue\Exception\AdapterException
-     * @expectedExceptionMessage The `clamscan` or `clamdscan` executable could not be found
-     */
-    public function testWithDatabase()
-    {
-        $this->adapter->setDatabase('/path/to/database');
     }
 }
