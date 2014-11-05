@@ -17,7 +17,7 @@ class ClamAVAdapter extends AbstractAdapter
     /**
      * @var string
      */
-    private $pathToDatabase;
+    private $databasePath;
 
     /**
      * @param string $clamScanPath
@@ -62,9 +62,9 @@ class ClamAVAdapter extends AbstractAdapter
     /**
      * @param string $pathToDatabase
      */
-    public function setDatabase($pathToDatabase)
+    public function setDatabase($databasePath)
     {
-        $this->pathToDatabase = $pathToDatabase;
+        $this->databasePath = $databasePath;
     }
 
     /**
@@ -78,8 +78,8 @@ class ClamAVAdapter extends AbstractAdapter
         $pb = $this->createProcessBuilder([$this->clamScanPath]);
         $pb->add('--no-summary');
 
-        if ($this->pathToDatabase) {
-            $pb->add(sprintf('--database=%s', $this->dbPath));
+        if ($this->databasePath) {
+            $pb->add(sprintf('--database=%s', $this->databasePath));
         }
 
         if ($this->usesDaemon()) {
