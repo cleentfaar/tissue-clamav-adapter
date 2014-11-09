@@ -21,7 +21,9 @@ class ClamAVAdapterTest extends AdapterTestCase
             $this->markTestSkipped('Unable to locate `clamscan` executable.');
         }
 
-        return new ClamAVAdapter($clamScanPath, __DIR__ . '/Fixtures/eicar-signatures.ndb');
+        $database = isset($_SERVER['CLAMSCAN_DATABASE']) ? $_SERVER['CLAMSCAN_DATABASE'] : null;
+
+        return new ClamAVAdapter($clamScanPath, $database);
     }
 
     /**
