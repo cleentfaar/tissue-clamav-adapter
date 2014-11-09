@@ -28,7 +28,7 @@ class ClamAVAdapterTest extends AdapterTestCase
 
     /**
      * @expectedException \CL\Tissue\Exception\AdapterException
-     * @expectedExceptionMessage The `clamscan` or `clamdscan` executable could not be found
+     * @expectedExceptionMessage The path to `clamscan` or `clamdscan` could not be found or is not executable
      */
     public function testInvalidClamScanPath()
     {

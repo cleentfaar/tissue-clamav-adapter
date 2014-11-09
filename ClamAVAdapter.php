@@ -22,18 +22,21 @@ class ClamAVAdapter extends AbstractAdapter
     /**
      * @param string      $clamScanPath
      * @param string|null $databasePath
+     *
+     * @throws AdapterException If the given path to clamscan is not executable
+     * @throws \LogicException If you supplied a path to the daemon-executable and a path to the database (incompatible)
      */
     public function __construct($clamScanPath, $databasePath = null)
     {
         if (!is_executable($clamScanPath)) {
             throw new AdapterException(sprintf(
-                'The `clamscan` or `clamdscan` executable could not be found in: "%s"',
+                'The path to `clamscan` or `clamdscan` could not be found or is not executable (path: %s)',
                 $clamScanPath
             ));
         }
 
-        if ($databasePath !== null && substr($clamScanPath, -9) === 'clamdscan') {
-            throw new \LogicException('You can\'t supply a database-path when using the clamdscan executable (daemon)');
+        if ($databasePath !== null && $this->usesDaemon($clamScanPath)) {
+            throw new \LogicException('You can\'t supply a database-path if you are using the ClamAV daemon service');
         }
 
         $this->clamScanPath = $clamScanPath;
@@ -43,26 +46,31 @@ class ClamAVAdapter extends AbstractAdapter
     /**
      * {@inheritdoc}
      */
-    public function scan($path, array $options = [])
+    public function scan(array $paths, array $options = [])
     {
-        if (is_array($path)) {
-            // clamscan does not seem to support scanning of multiple targets at the same time...
-            return $this->scanArray($path, $options);
-        } elseif (!is_string($path)) {
-            throw new AdapterException(sprintf(
-                'You must supply either a string or an array of paths to scan: "%s" given',
-                gettype($path)
-            ));
+        $files = [];
+        $detections = [];
+        foreach ($paths as $path) {
+            if (!is_string($path)) {
+                throw new AdapterException(sprintf(
+                    'You must supply an array of strings (paths) to scan: path with type "%s" given',
+                    gettype($path)
+                ));
+            }
+
+            $process    = $this->createProcess($path, $options);
+            $returnCode = $process->run();
+            $output     = trim($process->getOutput());
+            if (0 !== $returnCode && !strstr($output, ' FOUND')) {
+                throw AdapterException::fromProcess($process);
+            }
+
+            $result = $this->createScanResult($path, $output);
+            $files = array_merge($files, $result->getFiles());
+            $detections = array_merge($detections, $result->getDetections());
         }
 
-        $process = $this->createProcess($path, $options);
-        $returnCode = $process->run();
-        $output = trim($process->getOutput());
-        if (0 !== $returnCode && !strstr($output, ' FOUND')) {
-            throw AdapterException::fromProcess($process);
-        }
-
-        return $this->createScanResult($path, $output);
+        return new ScanResult($paths, $files, $detections);
     }
 
     /**
@@ -76,7 +84,7 @@ class ClamAVAdapter extends AbstractAdapter
         $pb = $this->createProcessBuilder([$this->clamScanPath]);
         $pb->add('--no-summary');
 
-        if ($this->usesDaemon()) {
+        if ($this->usesDaemon($this->clamScanPath)) {
             // Pass filedescriptor to clamd (useful if clamd is running as a different user)
             $pb->add('--fdpass');
         } elseif ($this->databasePath !== null) {
@@ -116,8 +124,8 @@ class ClamAVAdapter extends AbstractAdapter
     /**
      * @return bool
      */
-    private function usesDaemon()
+    private function usesDaemon($path)
     {
-        return substr($this->clamScanPath, -9) === 'clamdscan';
+        return substr($path, -9) === 'clamdscan';
     }
 }
