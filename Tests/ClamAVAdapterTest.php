@@ -21,14 +21,14 @@ class ClamAVAdapterTest extends AdapterTestCase
             $this->markTestSkipped('Unable to locate `clamscan` executable.');
         }
 
-        return new ClamAVAdapter($clamScanPath, isset($_SERVER['CLAMSCAN_DB']) ? $_SERVER['CLAMSCAN_DB'] : null);
+        return new ClamAVAdapter($clamScanPath, __DIR__ . '/Fixtures/eicar-signatures.ndb');
     }
 
     /**
      * @expectedException \CL\Tissue\Exception\AdapterException
      * @expectedExceptionMessage The `clamscan` or `clamdscan` executable could not be found
      */
-    public function testInvalidBinary()
+    public function testInvalidClamScanPath()
     {
         new ClamAVAdapter('/path/to/non-existing/binary');
     }

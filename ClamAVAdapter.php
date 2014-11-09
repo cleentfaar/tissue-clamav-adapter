@@ -32,6 +32,10 @@ class ClamAVAdapter extends AbstractAdapter
             ));
         }
 
+        if ($databasePath !== null && substr($clamScanPath, -9) === 'clamdscan') {
+            throw new \LogicException('You can\'t supply a database-path when using the clamdscan executable (daemon)');
+        }
+
         $this->clamScanPath = $clamScanPath;
         $this->databasePath = $databasePath;
     }
@@ -72,14 +76,12 @@ class ClamAVAdapter extends AbstractAdapter
         $pb = $this->createProcessBuilder([$this->clamScanPath]);
         $pb->add('--no-summary');
 
-        if ($this->databasePath !== null) {
-            $pb->add(sprintf('--database=%s', $this->databasePath));
-        }
-
         if ($this->usesDaemon()) {
-            // needed to bypass errors when executed under a different user
-            // this probably applies to almost every application
+            // Pass filedescriptor to clamd (useful if clamd is running as a different user)
             $pb->add('--fdpass');
+        } elseif ($this->databasePath !== null) {
+            // Only the (isolated) binary version can change the signature-database used
+            $pb->add(sprintf('--database=%s', $this->databasePath));
         }
 
         $pb->add($path);
