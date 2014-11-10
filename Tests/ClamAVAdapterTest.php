@@ -3,15 +3,10 @@
 namespace CL\Tissue\Adapter\ClamAV\Tests;
 
 use CL\Tissue\Adapter\ClamAV\ClamAVAdapter;
-use CL\Tissue\Tests\Adapter\AdapterTestCase;
+use CL\Tissue\Tests\Adapter\AbstractAdapterTestCase;
 
-class ClamAVAdapterTest extends AdapterTestCase
+class ClamAVAdapterTest extends AbstractAdapterTestCase
 {
-    /**
-     * @var ClamAVAdapter
-     */
-    protected $adapter;
-
     /**
      * {@inheritdoc}
      */

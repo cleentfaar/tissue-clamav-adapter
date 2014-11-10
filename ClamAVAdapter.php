@@ -24,7 +24,7 @@ class ClamAVAdapter extends AbstractAdapter
      * @param string|null $databasePath
      *
      * @throws AdapterException If the given path to clamscan is not executable
-     * @throws \LogicException If you supplied a path to the daemon-executable and a path to the database (incompatible)
+     * @throws \LogicException  If you supplied a path to the daemon-executable and a path to the database (incompatible)
      */
     public function __construct($clamScanPath, $databasePath = null)
     {
@@ -35,10 +35,6 @@ class ClamAVAdapter extends AbstractAdapter
             ));
         }
 
-        if ($databasePath !== null && $this->usesDaemon($clamScanPath)) {
-            throw new \LogicException('You can\'t supply a database-path if you are using the ClamAV daemon service');
-        }
-
         $this->clamScanPath = $clamScanPath;
         $this->databasePath = $databasePath;
     }
@@ -46,31 +42,23 @@ class ClamAVAdapter extends AbstractAdapter
     /**
      * {@inheritdoc}
      */
-    public function scan(array $paths, array $options = [])
+    public function detect($path, array $options = [])
     {
-        $files = [];
-        $detections = [];
-        foreach ($paths as $path) {
-            if (!is_string($path)) {
-                throw new AdapterException(sprintf(
-                    'You must supply an array of strings (paths) to scan: path with type "%s" given',
-                    gettype($path)
-                ));
-            }
-
-            $process    = $this->createProcess($path, $options);
-            $returnCode = $process->run();
-            $output     = trim($process->getOutput());
-            if (0 !== $returnCode && !strstr($output, ' FOUND')) {
-                throw AdapterException::fromProcess($process);
-            }
-
-            $result = $this->createScanResult($path, $output);
-            $files = array_merge($files, $result->getFiles());
-            $detections = array_merge($detections, $result->getDetections());
+        if (!is_string($path)) {
+            throw new AdapterException(sprintf(
+                'You must supply an array of strings (paths) to scan: path with type "%s" given',
+                gettype($path)
+            ));
         }
 
-        return new ScanResult($paths, $files, $detections);
+        $process    = $this->createProcess($path, $options);
+        $returnCode = $process->run();
+        $output     = trim($process->getOutput());
+        if (0 !== $returnCode && !strstr($output, ' FOUND')) {
+            throw AdapterException::fromProcess($process);
+        }
+
+        return $this->createScanResult($path, $output);
     }
 
     /**
@@ -105,14 +93,12 @@ class ClamAVAdapter extends AbstractAdapter
      */
     private function createScanResult($path, $output)
     {
-        $lines = explode("\n", $output);
-        $files = [];
+        $files      = [];
         $detections = [];
-        foreach ($lines as $line) {
+        foreach (explode("\n", $output) as $line) {
             $file = substr($line, 0, strripos($line, ':'));
-            if (substr($line, -3) !== ' OK') {
-                $afterFile = substr($line, strripos($line, ':') + 1);
-                $description = substr($afterFile, 0, -7);
+            if (substr($line, -6) === ' FOUND') {
+                $description  = substr(substr($line, strripos($line, ':') + 1), 0, -7);
                 $detections[] = $this->createDetection($file, Detection::TYPE_VIRUS, $description);
             }
             $files[] = $file;
