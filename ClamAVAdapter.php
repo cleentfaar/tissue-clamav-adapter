@@ -6,6 +6,7 @@ use CL\Tissue\Adapter\AbstractAdapter;
 use CL\Tissue\Exception\AdapterException;
 use CL\Tissue\Model\Detection;
 use CL\Tissue\Model\ScanResult;
+use Symfony\Component\Process\Process;
 
 class ClamAVAdapter extends AbstractAdapter
 {
@@ -42,7 +43,7 @@ class ClamAVAdapter extends AbstractAdapter
     /**
      * {@inheritdoc}
      */
-    public function detect($path, array $options = [])
+    protected function detect($path)
     {
         if (!is_string($path)) {
             throw new AdapterException(sprintf(
@@ -51,23 +52,31 @@ class ClamAVAdapter extends AbstractAdapter
             ));
         }
 
-        $process    = $this->createProcess($path, $options);
+        $process    = $this->createProcess($path);
         $returnCode = $process->run();
         $output     = trim($process->getOutput());
         if (0 !== $returnCode && !strstr($output, ' FOUND')) {
             throw AdapterException::fromProcess($process);
         }
 
-        return $this->createScanResult($path, $output);
+        foreach (explode("\n", $output) as $line) {
+            if (substr($line, -6) === ' FOUND') {
+                $file = substr($line, 0, strripos($line, ':'));
+                $description = substr(substr($line, strripos($line, ':') + 2), 0, -6);
+
+                return $this->createDetection($file, Detection::TYPE_VIRUS, $description);
+            }
+        }
+
+        return $this->createScanResult([$path], $output);
     }
 
     /**
      * @param string $path
-     * @param array  $options
      *
-     * @return \Symfony\Component\Process\Process
+     * @return Process
      */
-    private function createProcess($path, array $options)
+    private function createProcess($path)
     {
         $pb = $this->createProcessBuilder([$this->clamScanPath]);
         $pb->add('--no-summary');
@@ -86,25 +95,13 @@ class ClamAVAdapter extends AbstractAdapter
     }
 
     /**
-     * @param string $path
+     * @param array $paths
      * @param string $output
      *
      * @return ScanResult
      */
-    private function createScanResult($path, $output)
+    private function createScanResult(array $paths, $output)
     {
-        $files      = [];
-        $detections = [];
-        foreach (explode("\n", $output) as $line) {
-            $file = substr($line, 0, strripos($line, ':'));
-            if (substr($line, -6) === ' FOUND') {
-                $description  = substr(substr($line, strripos($line, ':') + 1), 0, -7);
-                $detections[] = $this->createDetection($file, Detection::TYPE_VIRUS, $description);
-            }
-            $files[] = $file;
-        }
-
-        return new ScanResult($path, $files, $detections);
     }
 
     /**
