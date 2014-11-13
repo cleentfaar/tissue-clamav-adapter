@@ -5,7 +5,6 @@ namespace CL\Tissue\Adapter\ClamAV;
 use CL\Tissue\Adapter\AbstractAdapter;
 use CL\Tissue\Exception\AdapterException;
 use CL\Tissue\Model\Detection;
-use CL\Tissue\Model\ScanResult;
 use Symfony\Component\Process\Process;
 
 class ClamAVAdapter extends AbstractAdapter
@@ -24,8 +23,7 @@ class ClamAVAdapter extends AbstractAdapter
      * @param string      $clamScanPath
      * @param string|null $databasePath
      *
-     * @throws AdapterException If the given path to clamscan is not executable
-     * @throws \LogicException  If you supplied a path to the daemon-executable and a path to the database (incompatible)
+     * @throws AdapterException If the given path to clamscan (or clamdscan) is not executable
      */
     public function __construct($clamScanPath, $databasePath = null)
     {
@@ -67,8 +65,6 @@ class ClamAVAdapter extends AbstractAdapter
                 return $this->createDetection($file, Detection::TYPE_VIRUS, $description);
             }
         }
-
-        return $this->createScanResult([$path], $output);
     }
 
     /**
@@ -92,16 +88,6 @@ class ClamAVAdapter extends AbstractAdapter
         $pb->add($path);
 
         return $pb->getProcess();
-    }
-
-    /**
-     * @param array $paths
-     * @param string $output
-     *
-     * @return ScanResult
-     */
-    private function createScanResult(array $paths, $output)
-    {
     }
 
     /**
