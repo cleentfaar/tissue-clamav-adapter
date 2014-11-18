@@ -5,7 +5,6 @@ namespace CL\Tissue\Adapter\ClamAv;
 use CL\Tissue\Adapter\AbstractAdapter;
 use CL\Tissue\Exception\AdapterException;
 use CL\Tissue\Model\Detection;
-use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\Process;
 
 class ClamAvAdapter extends AbstractAdapter
