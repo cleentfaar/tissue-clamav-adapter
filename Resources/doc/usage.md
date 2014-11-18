@@ -6,7 +6,7 @@ using ClamAV's engine:
 
 ```php
 $adapter = new ClamAVAdapter('/usr/bin/clamscan');
-$result = $adapter->scan('/path/to/scary/file');
+$result = $adapter->scan(['/path/to/scary/file']);
 
 // do we have a virus?
 $result->hasVirus(); // returns either true or false
