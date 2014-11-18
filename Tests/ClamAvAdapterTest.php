@@ -16,9 +16,7 @@ class ClamAvAdapterTest extends AbstractAdapterTestCase
             $this->markTestSkipped('Unable to locate `clamscan` executable.');
         }
 
-        $database = isset($_SERVER['CLAMSCAN_DATABASE']) ? $_SERVER['CLAMSCAN_DATABASE'] : null;
-
-        return new ClamAvAdapter($clamScanPath, $database);
+        return new ClamAvAdapter($clamScanPath);
     }
 
     /**
