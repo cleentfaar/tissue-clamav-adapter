@@ -18,8 +18,6 @@ before_script:
   # TODO: find a faster replacement for this as it currently takes at least 2 minutes to download
   # Sometimes even locks up the whole build...
   - sudo freshclam -v
-  # Start the daemon
-  - sudo /etc/init.d/clamav-daemon start
   # Prevent further building if following commands fail
   - clamscan composer.json
   - clamdscan --fdpass composer.json

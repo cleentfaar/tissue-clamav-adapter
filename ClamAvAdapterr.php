@@ -1,13 +1,14 @@
 <?php
 
-namespace CL\Tissue\Adapter\ClamAV;
+namespace CL\Tissue\Adapter\ClamAv;
 
 use CL\Tissue\Adapter\AbstractAdapter;
 use CL\Tissue\Exception\AdapterException;
 use CL\Tissue\Model\Detection;
+use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\Process;
 
-class ClamAVAdapter extends AbstractAdapter
+class ClamAvAdapter extends AbstractAdapter
 {
     /**
      * @var string

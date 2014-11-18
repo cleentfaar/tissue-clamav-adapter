@@ -2,10 +2,10 @@
 
 namespace CL\Tissue\Adapter\ClamAV\Tests;
 
-use CL\Tissue\Adapter\ClamAV\ClamAVAdapter;
+use CL\Tissue\Adapter\ClamAv\ClamAvAdapter;
 use CL\Tissue\Tests\Adapter\AbstractAdapterTestCase;
 
-class ClamAVAdapterTest extends AbstractAdapterTestCase
+class ClamAvAdapterTest extends AbstractAdapterTestCase
 {
     /**
      * {@inheritdoc}
@@ -18,7 +18,7 @@ class ClamAVAdapterTest extends AbstractAdapterTestCase
 
         $database = isset($_SERVER['CLAMSCAN_DATABASE']) ? $_SERVER['CLAMSCAN_DATABASE'] : null;
 
-        return new ClamAVAdapter($clamScanPath, $database);
+        return new ClamAvAdapter($clamScanPath, $database);
     }
 
     /**
@@ -27,6 +27,6 @@ class ClamAVAdapterTest extends AbstractAdapterTestCase
      */
     public function testInvalidClamScanPath()
     {
-        new ClamAVAdapter('/path/to/non-existing/binary');
+        new ClamAvAdapter('/path/to/non-existing/binary');
     }
 }

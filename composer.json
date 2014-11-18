@@ -26,7 +26,7 @@
   },
   "autoload": {
     "psr-4": {
-      "CL\\Tissue\\Adapter\\ClamAV\\": ""
+      "CL\\Tissue\\Adapter\\ClamAv\\": ""
     }
   },
   "config": {
