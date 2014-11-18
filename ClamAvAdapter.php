@@ -43,13 +43,6 @@ class ClamAvAdapter extends AbstractAdapter
      */
     protected function detect($path)
     {
-        if (!is_string($path)) {
-            throw new AdapterException(sprintf(
-                'You must supply an array of strings (paths) to scan: path with type "%s" given',
-                gettype($path)
-            ));
-        }
-
         $process    = $this->createProcess($path);
         $returnCode = $process->run();
         $output     = trim($process->getOutput());
