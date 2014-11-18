@@ -18,9 +18,10 @@ before_script:
   # TODO: find a faster replacement for this as it currently takes at least 2 minutes to download
   # Sometimes even locks up the whole build...
   - sudo freshclam -v
+  - sudo service clamav-daemon restart
   # Prevent further building if following commands fail
   - clamscan composer.json
-  - sudo clamdscan --fdpass composer.json
+  - clamdscan --fdpass composer.json
   # Continue safely...
   - composer install --dev
 
