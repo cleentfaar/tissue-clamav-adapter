@@ -20,7 +20,7 @@ before_script:
   - sudo freshclam -v
   # Prevent further building if following commands fail
   - clamscan composer.json
-  - clamdscan --fdpass composer.json
+  - sudo clamdscan --fdpass composer.json
   # Continue safely...
   - composer install --dev
 
